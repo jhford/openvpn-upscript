@@ -2,6 +2,7 @@ package iptables
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -50,9 +51,13 @@ func (c Config) Apply() error {
 		output, err := cmd.CombinedOutput()
 		if err != nil {
 			// Libraries shouldn't write to stdio, but...
-			fmt.Fprintf(os.Stderr, "ERROR: %v %s\n%s\n", command, err, output)
+			_, err2 := fmt.Fprintf(os.Stderr, "ERROR: %v %s\n%s\n", command, err, output)
+			if err2 != nil {
+				panic(err2)
+			}
 			return err
 		}
+		log.Printf("succesfully ran %s", command)
 	}
 
 	return nil

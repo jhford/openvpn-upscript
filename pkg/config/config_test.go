@@ -35,18 +35,16 @@ func TestParseForeignOption(t *testing.T) {
 	}
 }
 
-func TestDetermineConfig(t *testing.T) {
+func TestConfig_ParseEnv(t *testing.T) {
 	tests := []struct {
 		envs     [][2]string
 		args     []string
 		expected config.Config
 	}{
 		{
-			envs: [][2]string{[2]string{"foreign_option_1", "dhcp-option DNS 127.0.0.1"}},
-			args: []string{"prog", "tun0"},
+			envs: [][2]string{{"foreign_option_1", "dhcp-option DNS 127.0.0.1"}},
 			expected: config.Config{
-				TunDevice:   "tun0",
-				NameServers: []pkg.NameServer{pkg.NameServer{127, 0, 0, 1}},
+				NameServers: []pkg.NameServer{{127, 0, 0, 1}},
 			},
 		},
 	}
@@ -62,10 +60,8 @@ func TestDetermineConfig(t *testing.T) {
 		}
 
 		cfg := config.Config{}
-		err := cfg.Determine(test.args)
+		err := cfg.ParseEnv()
 		assert.NoError(t, err)
-
-		assert.Equal(t, test.expected.TunDevice, cfg.TunDevice)
 
 		for _, v := range test.expected.NameServers {
 			assert.True(t, net.IP(v).Equal(net.IP{127, 0, 0, 1}))

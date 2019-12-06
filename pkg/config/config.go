@@ -33,19 +33,14 @@ type Config struct {
 }
 
 // Determine builds a new and complete Config.  Args must function and be structured
-// as os.Args.
-func (c *Config) Determine(args []string) error {
-	if len(args) < 1 {
-		return fmt.Errorf("missing device in arguments")
-	}
-
-	c.TunDevice = args[1]
-
+// as os.Args.  This would ideally not read the environment directly, but as there's
+// no easy to lookup environment (e.g. map[string]string) copy in the stdlib, this will
+// do.  In usage this makes no difference, but in testing it does limit to a single
+// concurrent ParseEnv() test.  This isn't guarded with a mutex, so is racey
+func (c *Config) ParseEnv() error {
 	for i := 1; ; i++ {
 		key := fmt.Sprintf("foreign_option_%d", i)
-		println("Looking up " + key)
 		if v, ok := os.LookupEnv(key); ok {
-			println("Found env")
 			rawOpt, err := ParseForeignOption(v)
 			if err != nil {
 				return err
@@ -56,7 +51,6 @@ func (c *Config) Determine(args []string) error {
 				c.NameServers = append(c.NameServers, opt)
 			}
 		} else {
-			println("Didn't Found env")
 			break
 		}
 	}
