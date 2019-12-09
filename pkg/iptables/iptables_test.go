@@ -3,7 +3,7 @@ package iptables_test
 import (
 	"testing"
 
-	"github.com/jhford/openvpn-helper/pkg/iptables"
+	"github.com/jhford/openvpn-up/pkg/iptables"
 	"github.com/stretchr/testify/assert"
 )
 

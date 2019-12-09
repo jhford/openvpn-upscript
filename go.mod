@@ -1,4 +1,4 @@
-module github.com/jhford/openvpn-helper
+module github.com/jhford/openvpn-up
 
 go 1.13
 

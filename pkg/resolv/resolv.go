@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/jhford/openvpn-helper/pkg"
+	"github.com/jhford/openvpn-up/pkg"
 )
 
 // Config is resolve writer configuration

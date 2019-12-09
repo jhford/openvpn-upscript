@@ -3,10 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/jhford/openvpn-helper/pkg"
-	"github.com/jhford/openvpn-helper/pkg/config"
-	"github.com/jhford/openvpn-helper/pkg/iptables"
-	"github.com/jhford/openvpn-helper/pkg/resolv"
+	"github.com/jhford/openvpn-up/pkg"
+	"github.com/jhford/openvpn-up/pkg/config"
+	"github.com/jhford/openvpn-up/pkg/iptables"
+	"github.com/jhford/openvpn-up/pkg/resolv"
 	"github.com/urfave/cli"
 	"log"
 	"net"
@@ -32,37 +32,37 @@ func main() {
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:     "tundev",
-			EnvVar:   "TUNDEV",
-			Usage: "tunnel device source",
+			Name:   "tundev",
+			EnvVar: "TUNDEV",
+			Usage:  "tunnel device source",
 		},
 		cli.StringFlag{
-			Name:     "destdev",
-			EnvVar:   "DESTDEV",
-			Value:    "br0",
-			Usage: "destination device to route traffic to",
+			Name:   "destdev",
+			EnvVar: "DESTDEV",
+			Value:  "br0",
+			Usage:  "destination device to route traffic to",
 		},
 		cli.StringFlag{
 			Name:   "resolvconf",
 			EnvVar: "RESOLVCONF",
 			Value:  "/tmp/openvpn-up-resolv.conf",
-			Usage: "file path to the output resolv.conf file",
+			Usage:  "file path to the output resolv.conf file",
 		},
 		cli.BoolFlag{
 			Name:   "flush",
 			EnvVar: "FLUSH",
-			Usage: "flush iptables before setting up routing",
+			Usage:  "flush iptables before setting up routing",
 		},
 		cli.StringFlag{
 			Name:   "iptables",
 			EnvVar: "IPTABLES",
 			Value:  "iptables",
-			Usage: "custom command for iptables.  PATH resolution is not supported",
+			Usage:  "custom command for iptables.  PATH resolution is not supported",
 		},
 		cli.StringSliceFlag{
-			Name:      "append-nameserver",
-			EnvVar:    "APPEND_NAMESERVER",
-			Usage: "manually appended name servers to add to resolv.conf",
+			Name:   "append-nameserver",
+			EnvVar: "APPEND_NAMESERVER",
+			Usage:  "manually appended name servers to add to resolv.conf",
 		},
 	}
 
@@ -72,7 +72,7 @@ func main() {
 
 		if ctx.IsSet("tundev") && ctx.NArg() < 1 {
 			tundev = ctx.String("tundev")
-		} else if ctx.NArg() > 0{
+		} else if ctx.NArg() > 0 {
 			tundev = ctx.Args()[0]
 		} else {
 			return errors.New("no tunnel device specified")
@@ -101,7 +101,7 @@ func main() {
 				cfg.NameServers = append(cfg.NameServers, pkg.NameServer(nsip))
 			}
 		}
-		
+
 		resolvConf := resolv.Config{
 			NameServers: cfg.NameServers,
 		}
@@ -117,10 +117,10 @@ func main() {
 		log.Printf("wrote resolv.conf to %s", ctx.String("resolvconf"))
 
 		rules := iptables.Config{
-			TunDevice: cfg.TunDevice,
-			DestDevice: cfg.DestDevice,
+			TunDevice:   cfg.TunDevice,
+			DestDevice:  cfg.DestDevice,
 			FlushTables: ctx.Bool("flush"),
-			IPTables: ctx.String("iptables"),
+			IPTables:    ctx.String("iptables"),
 		}
 
 		if err = rules.Apply(); err != nil {

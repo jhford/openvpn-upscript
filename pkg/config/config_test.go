@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jhford/openvpn-helper/pkg"
-	"github.com/jhford/openvpn-helper/pkg/config"
+	"github.com/jhford/openvpn-up/pkg"
+	"github.com/jhford/openvpn-up/pkg/config"
 	"github.com/stretchr/testify/assert"
 )
 

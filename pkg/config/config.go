@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jhford/openvpn-helper/pkg"
+	"github.com/jhford/openvpn-up/pkg"
 )
 
 // ParseForeignOption parses foreign options.
